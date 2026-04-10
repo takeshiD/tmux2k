@@ -14,7 +14,9 @@ offline_icon=$(get_tmux_option "@tmux2k-network-offline-icon" "󰌙")
 get_ssid() {
     case $(uname -s) in
     Linux)
-        if command -v iwgetid >/dev/null 2>&1; then
+        if command -v nmcli > /dev/null 2>&1; then
+            SSID=$(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f 2)
+        elif command -v iwgetid >/dev/null 2>&1; then
             SSID=$(iwgetid -r)
         else
             wlaninfo=$(iw wlan0 link)
